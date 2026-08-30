@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⏳ تایمر قطع سرویس</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Vazirmatn',Tahoma,sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);display:flex;justify-content:center;align-items:center;min-height:100vh;direction:rtl;padding:15px}
+  .box{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);padding:25px 20px;border-radius:25px;box-shadow:0 20px 50px rgba(0,0,0,0.7);text-align:center;color:#fff;max-width:380px;width:100%;border:1px solid rgba(255,255,255,0.08)}
+  .icon{font-size:35px;margin-bottom:5px}
+  h2{color:#fff;font-size:18px;font-weight:700;margin-bottom:3px;font-family:'Vazirmatn',Tahoma,sans-serif}
+  .sub{color:rgba(255,255,255,0.5);font-size:12px;margin-bottom:20px;font-family:'Vazirmatn',Tahoma,sans-serif}
+  .timer-wrap{background:rgba(0,0,0,0.4);padding:15px 10px;border-radius:14px;margin-bottom:15px;border:1px solid rgba(0,212,255,0.1)}
+  .timer{font-size:30px;font-weight:bold;color:#00d4ff;direction:ltr;letter-spacing:4px;text-shadow:0 0 20px rgba(0,212,255,0.2);font-family:'Vazirmatn',Tahoma,sans-serif}
+  .days{font-size:13px;color:rgba(255,255,255,0.4);margin-top:3px;font-family:'Vazirmatn',Tahoma,sans-serif}
+  .warning{background:rgba(255,165,0,0.1);padding:8px 12px;border-radius:10px;color:#f5a623;font-size:11px;margin:10px 0 15px;border-right:2px solid #f5a623;font-family:'Vazirmatn',Tahoma,sans-serif}
+  .btn{display:inline-block;padding:9px 28px;background:linear-gradient(135deg,#e94560,#c23152);color:#fff;text-decoration:none;border-radius:40px;font-weight:bold;font-size:13px;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(233,69,96,0.3);font-family:'Vazirmatn',Tahoma,sans-serif}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(233,69,96,0.4)}
+  .expired{color:#ff4757;font-size:26px;font-weight:bold;font-family:'Vazirmatn',Tahoma,sans-serif}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2ed573;margin-left:6px;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .footer{color:rgba(255,255,255,0.15);font-size:10px;margin-top:15px;font-family:'Vazirmatn',Tahoma,sans-serif}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <div class="icon">⏰</div>
+  <h2>زمان باقی‌مانده تا قطع سرویس</h2>
+  <div class="sub">در صورت عدم پرداخت، دسترسی شما غیرفعال خواهد شد</div>
+
+  <div class="timer-wrap">
+    <div class="timer" id="countdown">--:--:--</div>
+    <div class="days" id="daysDisplay"></div>
+  </div>
+
+  <div class="warning">
+    <span class="status-dot"></span>
+    ⚠️ لطفاً هرچه سریع‌تر نسبت به پرداخت اقدام کنید
+  </div>
+  <a
+    >سرویس های شما:
+ </a>
+  <br></br>
+  
+ <a
+    >
+  ۱- هیوا حرفه ای
+     </a>
+  <br></br>
+  
+  <a
+    >
+    ۲- برهم حرفه ای
+    </a>
+  <br></br>
+  <a
+    >
+    ۳-هیوا نت ملی </a>
+  <br></br>
+
+  <a class="btn" href="https://t.me/kaveh_6632">🔓 رفع توقف سرویس</a>
+  <div class="footer">پشتیبانی ۲۴ ساعته ۰۹۱۸۲۷۱۶۶۳۲</div>
+</div>
+
+<script>
+// ============================================
+// 🕒 تاریخ قطع سرویس رو اینجا تنظیم کن
+// ============================================
+const targetTime = new Date(2026, 7, 30, 20, 59, 59).getTime();
+//               سال  ماه  روز  ساعت  دقیقه  ثانیه
+// ماه از 0 تا 11: فروردین=0، مرداد=7، اسفند=11
+// ============================================
+
+function updateTimer() {
+  const now = Date.now();
+  let diff = targetTime - now;
+
+  if (diff <= 0) {
+    document.getElementById('countdown').innerHTML = '<span class="expired">⛔ سرویس قطع شد</span>';
+    document.getElementById('daysDisplay').textContent = 'برای فعال‌سازی مجدد با پشتیبانی تماس بگیرید';
+    return;
+  }
+
+  const days = Math.floor(diff / 86400000);
+  diff -= days * 86400000;
+  const hours = Math.floor(diff / 3600000);
+  diff -= hours * 3600000;
+  const mins = Math.floor(diff / 60000);
+  diff -= mins * 60000;
+  const secs = Math.floor(diff / 1000);
+
+  let display = '';
+  if (days > 0) display = days + ' روز و ';
+  display += String(hours).padStart(2, '0') + ':' +
+             String(mins).padStart(2, '0') + ':' +
+             String(secs).padStart(2, '0');
+
+  document.getElementById('countdown').textContent = display;
+
+  if (days > 0) {
+    document.getElementById('daysDisplay').textContent = days + ' روز مانده تا پایان مهلت';
+  } else {
+    document.getElementById('daysDisplay').textContent = 'کمتر از ۲۴ ساعت باقی مانده ⏰';
+  }
+}
+
+updateTimer();
+setInterval(updateTimer, 1000);
+</script>
+</body>
+</html>
